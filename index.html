@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Energy Transition Website</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout-root">
+      <!-- <header class="site-header">
+        <div class="header-inner">
+          <div class="header-row">
+            <a href="#" class="logo-link">
+              <div class="logo-mark">
+                <svg class="icon icon-stroke" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="color: #ffffff">
+                  <path d="M12.8 19.6A2 2 0 1 0 14 16H2" />
+                  <path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" />
+                  <path d="M9.8 4.4A2 2 0 1 1 11 8H2" />
+                </svg>
+              </div>
+              <div class="logo-col">
+                <span class="logo-title">PowerPort</span>
+                <span class="logo-sub">Geertruidenberg</span>
+              </div>
+            </a>
+
+            <nav class="desktop-nav" aria-label="Main">
+              <a href="#" class="nav-link">Home</a>
+              <a href="#" class="nav-link nav-link--active">Interactive Map</a>
+              <a href="#" class="nav-link">Updates</a>
+              <a href="#" class="nav-link">Learn &amp; Explore</a>
+              <a href="#" class="nav-link">About</a>
+            </nav>
+
+            <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu" aria-expanded="false">
+              <svg class="icon icon-stroke" id="icon-menu-svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="color: #374151">
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </svg>
+              <svg class="icon icon-stroke hidden" id="icon-close-svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="color: #374151">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile main">
+            <a href="#" class="mobile-nav-link">Home</a>
+            <a href="#" class="mobile-nav-link mobile-nav-link--active">Interactive Map</a>
+            <a href="#" class="mobile-nav-link">Updates</a>
+            <a href="#" class="mobile-nav-link">Learn &amp; Explore</a>
+            <a href="#" class="mobile-nav-link">About</a>
+          </nav>
+        </div>
+      </header> -->
+
+      <main class="site-main">
+        <div class="map-page">
+          <section class="map-hero">
+            <div class="map-hero-inner">
+              <div class="map-hero-title-row">
+                <svg class="icon icon-stroke" width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" style="color: #ffffff">
+                  <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <h1>Interactive Map</h1>
+              </div>
+              <p class="map-hero-p">
+                Explore current and future energy installations in the Amer industrial area. Click on markers to learn more about each facility.
+              </p>
+            </div>
+          </section>
+
+          <div class="map-content">
+            <div class="toolbar-wrap">
+              <div class="toolbar-grid">
+                <div class="toolbar-card toolbar-card--search">
+                  <div class="search-bar">
+                    <div class="search-bar-icon" aria-hidden="true">
+                      <svg class="icon icon-stroke" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                      </svg>
+                    </div>
+
+                    <div class="search-wrap">
+                      <input type="text" id="search-input" class="search-input" placeholder="Search locations" autocomplete="off" />
+                      <button type="button" id="search-clear" class="search-clear hidden" aria-label="Clear search">
+                        <svg class="icon icon-stroke" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M18 6 6 18" />
+                          <path d="m6 6 12 12" />
+                        </svg>
+                      </button>
+                      <div id="search-results" class="search-results hidden" role="listbox" aria-label="Search results"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="toolbar-card toolbar-card--filters">
+                  <div class="filters-inline" aria-label="Filters">
+                    <div class="segmented segmented--type">
+                      <button type="button" class="filter-btn" id="filter-type-offshore">Offshore</button>
+                      <button type="button" class="filter-btn" id="filter-type-onshore">Onshore</button>
+                    </div>
+
+                    <div class="segmented">
+                      <button type="button" class="filter-btn" id="filter-status-existing">Existing</button>
+                      <button type="button" class="filter-btn" id="filter-status-planned">Planned</button>
+                      <button type="button" class="filter-btn" id="filter-status-research">Research</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="map-card">
+              <div id="map-container"></div>
+              <div class="map-legend">
+                <div class="legend-row">
+                  <div class="legend-item">
+                    <div class="legend-dot legend-dot--existing" style="background-color: #3fb950"></div>
+                    <span>Existing</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background-color: #ff9933"></div>
+                    <span>Planned</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot legend-dot--research" style="background-color: #a371f7"></div>
+                    <span>Research</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background-color: #39c5cf"></div>
+                    <span>Offshore</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-sections">
+              <h2 class="info-h2">Installation Categories</h2>
+
+              <div class="info-card">
+                <div class="info-card-header">
+                  <div class="info-card-icon" style="background-color: #6699cc">
+                    <svg class="icon icon-stroke" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" style="color: #ffffff">
+                      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div class="info-card-titles">
+                    <h3>Infrastructure Layers</h3>
+                    <p>Core energy transmission infrastructure</p>
+                  </div>
+                </div>
+                <div class="grid-3">
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #39c5cf"></div>
+                      <h4 class="subcard-h4">Offshore Wind Area</h4>
+                    </div>
+                    <p class="text-sm">Nederwiek 3 wind farm generating ~2 GW of clean energy from the North Sea</p>
+                  </div>
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #58a6ff"></div>
+                      <h4 class="subcard-h4">Converter Station</h4>
+                    </div>
+                    <p class="text-sm">Converts 525 kV DC from offshore to 380 kV AC for the national grid</p>
+                  </div>
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #db6d28"></div>
+                      <h4 class="subcard-h4">TenneT Substations</h4>
+                    </div>
+                    <p class="text-sm">380 kV and 150 kV substations for regional grid distribution in Amer area</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-card">
+                <div class="info-card-header">
+                  <div class="info-card-icon" style="background-color: #ff9933">
+                    <span class="info-card-icon--emoji" aria-hidden="true">⚡</span>
+                  </div>
+                  <div class="info-card-titles">
+                    <h3>Power &amp; Industry</h3>
+                    <p>Energy generation and storage facilities</p>
+                  </div>
+                </div>
+                <div class="grid-4">
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #d29922"></div>
+                      <h4 class="subcard-h4-sm">Amercentrale</h4>
+                    </div>
+                    <p class="text-xs">600 MW biomass power plant - existing infrastructure</p>
+                  </div>
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #3fb950"></div>
+                      <h4 class="subcard-h4-sm">Hydrogen Facilities</h4>
+                    </div>
+                    <p class="text-xs">100 MW electrolyser for green hydrogen production and storage</p>
+                  </div>
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #a371f7"></div>
+                      <h4 class="subcard-h4-sm">Battery Storage</h4>
+                    </div>
+                    <p class="text-xs">MWh-scale grid energy storage for flexibility and stability</p>
+                  </div>
+                  <div class="subcard">
+                    <div class="subcard-row">
+                      <div class="subcard-dot" style="background-color: #f85149"></div>
+                      <h4 class="subcard-h4-sm">CO₂ Capture</h4>
+                    </div>
+                    <p class="text-xs">BECCUS project for CO₂ capture and storage from biomass operations</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="info-card">
+                  <div class="info-card-header">
+                    <div class="info-card-icon" style="background-color: #ea4aaa">
+                      <span class="info-card-icon--emoji" aria-hidden="true">♨️</span>
+                    </div>
+                    <div class="info-card-titles">
+                      <h3>District Heating</h3>
+                      <p>Sustainable heat distribution</p>
+                    </div>
+                  </div>
+                  <p class="info-p">
+                    ENNatuurlijk operates a district heating network that utilizes residual heat from the Amercentrale biomass plant, providing sustainable heating to Oosterhout and potentially extending to Tilburg.
+                  </p>
+                  <div class="info-foot">
+                    <div class="info-foot-dot" style="background-color: #ea4aaa"></div>
+                    <span>Heat pipeline network connecting industrial and residential areas</span>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <div class="info-card-header">
+                    <div class="info-card-icon" style="background-color: #22c55e">
+                      <span class="info-card-icon--emoji" aria-hidden="true">🌿</span>
+                    </div>
+                    <div class="info-card-titles">
+                      <h3>Nature &amp; Landscape</h3>
+                      <p>Ecological development projects</p>
+                    </div>
+                  </div>
+                  <p class="info-p">
+                    Planned green-blue corridors including Little Biesbosch, Donge River ecological zones, and Amertak canal landscape areas focusing on biodiversity, water management, and recreation.
+                  </p>
+                  <div class="info-foot">
+                    <div class="info-foot-dot" style="background-color: #22c55e"></div>
+                    <span>Nature restoration and ecological habitat development</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="info-card">
+                  <div class="info-card-header">
+                    <div class="info-card-icon" style="background-color: #8b949e">
+                      <span class="info-card-icon--emoji" aria-hidden="true">🏘️</span>
+                    </div>
+                    <div class="info-card-titles">
+                      <h3>Regional Context</h3>
+                      <p>Municipalities &amp; landmarks</p>
+                    </div>
+                  </div>
+                  <p class="info-p">
+                    The PowerPort project spans multiple municipalities in North Brabant including Geertruidenberg (converter station host), Drimmelen, Moerdijk (industrial infrastructure), and connects to Tilburg.
+                  </p>
+                  <div class="context-grid">
+                    <div class="context-item"><div class="dot"></div><span>Geertruidenberg</span></div>
+                    <div class="context-item"><div class="dot"></div><span>Drimmelen</span></div>
+                    <div class="context-item"><div class="dot"></div><span>Moerdijk</span></div>
+                    <div class="context-item"><div class="dot"></div><span>Tilburg</span></div>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <div class="info-card-header">
+                    <div class="info-card-icon" style="background-color: #6699cc">
+                      <span class="info-card-icon--emoji" aria-hidden="true">🔌</span>
+                    </div>
+                    <div class="info-card-titles">
+                      <h3>Connections</h3>
+                      <p>Cables &amp; pipelines</p>
+                    </div>
+                  </div>
+                  <div class="connections-list">
+                    <div class="conn-row">
+                      <div class="conn-line" style="background-color: #39c5cf"></div>
+                      <div class="conn-text"><strong>Subsea Cable:</strong> 525 kV DC from Nederwiek 3 to Geertruidenberg</div>
+                    </div>
+                    <div class="conn-row">
+                      <div class="conn-line" style="background-color: #58a6ff"></div>
+                      <div class="conn-text"><strong>Grid Connection:</strong> 380/150 kV AC links to TenneT substations</div>
+                    </div>
+                    <div class="conn-row">
+                      <div class="conn-line" style="background-color: #ea4aaa"></div>
+                      <div class="conn-text"><strong>Heating Network:</strong> Pipeline from Amer to Oosterhout and Tilburg</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div>
+              <h3 class="footer-heading">PowerPort Geertruidenberg</h3>
+              <p class="footer-text">
+                An energy transition project by the Municipality of Geertruidenberg connecting offshore wind energy to the Amer industrial area.
+              </p>
+            </div>
+            <div>
+              <h3 class="footer-heading">Navigation</h3>
+              <ul class="footer-links">
+                <li><a href="../">Home</a></li>
+                <li><a href="./">Interactive Map</a></li>
+                <li><a href="../updates">Project News</a></li>
+                <li><a href="../about">About the Project</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="footer-heading">Contact Information</h3>
+              <p class="footer-text">
+                Municipality of Geertruidenberg<br />
+                Markt 1<br />
+                4931 BP Geertruidenberg<br />
+                <a href="mailto:info@geertruidenberg.nl">info@geertruidenberg.nl</a>
+              </p>
+            </div>
+            <div>
+              <h3 class="footer-heading">Project Partners</h3>
+              <p class="footer-text">
+                TenneT (Grid Operator)<br />
+                Nederwiek Consortium<br />
+                Ministry of Economic Affairs
+              </p>
+            </div>
+          </div>
+          <div class="footer-bottom">© 2026 Municipality of Geertruidenberg. Official government project information.</div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="map.js"></script>
+  </body>
+</html>
